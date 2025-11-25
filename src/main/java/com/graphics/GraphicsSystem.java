@@ -241,10 +241,25 @@ public class GraphicsSystem extends Application {
         Label listLabel = new Label("Scene Objects:");
         listLabel.setStyle("-fx-text-fill: white;");
 
+        // Mode toggle button
+        Button modeToggleBtn = new Button("🔄 切换到移动模式");
+        modeToggleBtn.setMaxWidth(Double.MAX_VALUE);
+        modeToggleBtn.setStyle("-fx-font-size: 12px; -fx-font-weight: bold;");
+        modeToggleBtn.setOnAction(e -> {
+            cameraLocked = !cameraLocked;
+            updateModeLabel();
+            if (sceneModeLabel != null) {
+                sceneModeLabel.setText(cameraLocked ? "模式: 移动对象" : "模式: 相机");
+            }
+            modeToggleBtn.setText(cameraLocked ? "🔄 切换到相机模式" : "🔄 切换到移动模式");
+            statusLabel.setText(cameraLocked ? "Mode: MOVE OBJECT - Drag to move selected objects"
+                    : "Mode: CAMERA - Drag to rotate scene");
+        });
+
         Button deleteBtn = createButton("Delete Selected", this::deleteSelected);
         Button clearBtn = createButton("Clear Scene", this::clearScene);
 
-        pane.getChildren().addAll(label, grid, listLabel, objectListView, deleteBtn, clearBtn);
+        pane.getChildren().addAll(label, grid, listLabel, objectListView, modeToggleBtn, deleteBtn, clearBtn);
         VBox.setVgrow(objectListView, Priority.ALWAYS);
 
         return pane;
