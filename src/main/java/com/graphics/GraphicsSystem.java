@@ -61,6 +61,10 @@ public class GraphicsSystem extends Application {
     // Bounding boxes
     private boolean showBoundingBoxes = false;
 
+    // Interaction modes
+    private boolean cameraLocked = false; // false = camera mode, true = object move mode
+    private boolean isDraggingLight = false;
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -130,6 +134,10 @@ public class GraphicsSystem extends Application {
         setupEventHandlers();
 
         Scene scene = new Scene(root, 1200, 800);
+
+        // Add keyboard event handlers
+        scene.setOnKeyPressed(e -> handleKeyPress(e));
+
         primaryStage.setTitle("Advanced JavaFX 3D Graphics System");
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -802,5 +810,41 @@ public class GraphicsSystem extends Application {
     private void updateSelectionInfo() {
         int count = selectionManager.getSelectionCount();
         selectionLabel.setText("Selected: " + count);
+    }
+
+    /**
+     * Handle keyboard shortcuts
+     */
+    private void handleKeyPress(KeyEvent e) {
+        switch (e.getCode()) {
+            case BACK_SPACE:
+            case DELETE:
+                // Delete selected objects
+                deleteSelected();
+                e.consume();
+                break;
+
+            case R:
+                // Toggle camera lock / object move mode
+                cameraLocked = !cameraLocked;
+                updateModeLabel();
+                statusLabel.setText(cameraLocked ? "Mode: OBJECT MOVE (drag objects or light)"
+                        : "Mode: CAMERA (rotate/pan/zoom scene)");
+                e.consume();
+                break;
+
+            case ESCAPE:
+                // Clear selection
+                selectionManager.clearSelection();
+                updateSelectionInfo();
+                e.consume();
+                break;
+        }
+    }
+
+    private void updateModeLabel() {
+        if (modeLabel != null) {
+            modeLabel.setText("Mode: " + (cameraLocked ? "MOVE OBJECT" : "CAMERA"));
+        }
     }
 }
