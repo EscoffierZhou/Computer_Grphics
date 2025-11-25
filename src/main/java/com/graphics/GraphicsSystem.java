@@ -846,13 +846,16 @@ public class GraphicsSystem extends Application {
                 break;
 
             case R:
-                cameraLocked = !cameraLocked;
-                updateModeLabel();
-                if (sceneModeLabel != null) {
-                    sceneModeLabel.setText(cameraLocked ? "模式: 移动对象" : "模式: 相机");
+                // Toggle camera lock / object move mode (Ctrl+R)
+                if (e.isControlDown()) {
+                    cameraLocked = !cameraLocked;
+                    updateModeLabel();
+                    if (sceneModeLabel != null) {
+                        sceneModeLabel.setText(cameraLocked ? "模式: 移动对象" : "模式: 相机");
+                    }
+                    statusLabel.setText(cameraLocked ? "Mode: OBJECT MOVE..." : "Mode: CAMERA...");
+                    e.consume();
                 }
-                statusLabel.setText(cameraLocked ? "Mode: OBJECT MOVE..." : "Mode: CAMERA...");
-                e.consume();
                 break;
 
             case ESCAPE:
