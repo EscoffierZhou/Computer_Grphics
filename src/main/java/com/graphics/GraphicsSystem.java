@@ -40,6 +40,7 @@ public class GraphicsSystem extends Application {
     private Label cameraPosLabel;
     private Label modeLabel;
     private Label selectionLabel;
+    private Label sceneModeLabel;
     private TextField scaleField;
     private TextField rotateField;
     private TextField posXField, posYField, posZField;
@@ -124,9 +125,19 @@ public class GraphicsSystem extends Application {
         // Create Status Bar (Bottom)
         HBox statusBar = createStatusBar();
 
+        // Add mode indicator overlay
+        Label sceneModeLabel = new Label("模式: 相机");
+        sceneModeLabel.setStyle(
+                "-fx-background-color: rgba(0,0,0,0.7); -fx-text-fill: white; -fx-padding: 8px 12px; -fx-font-size: 14px; -fx-font-weight: bold;");
+        sceneModeLabel.setMouseTransparent(true);
+        StackPane sceneContainer = new StackPane();
+        sceneContainer.getChildren().addAll(subScene, sceneModeLabel);
+        StackPane.setAlignment(sceneModeLabel, javafx.geometry.Pos.TOP_LEFT);
+        StackPane.setMargin(sceneModeLabel, new Insets(10));
+
         // Layout
         root.setTop(menuBar);
-        root.setCenter(subScene);
+        root.setCenter(sceneContainer);
         root.setLeft(leftPanel);
         root.setBottom(statusBar);
 
@@ -761,7 +772,7 @@ public class GraphicsSystem extends Application {
             mouseOldY = e.getSceneY();
 
             // Object picking
-            if (e.isPrimaryButtonDown() && !e.isControlDown()) {
+            if (e.isPrimaryButtonDown()) {
                 PickResult result = e.getPickResult();
                 Node picked = result.getIntersectedNode();
 
@@ -780,9 +791,19 @@ public class GraphicsSystem extends Application {
             double dy = e.getSceneY() - mouseOldY;
 
             if (e.isPrimaryButtonDown() && !e.isControlDown()) {
-                // Rotate camera
-                cameraXRotate.setAngle(cameraXRotate.getAngle() - dy * 0.2);
-                cameraYRotate.setAngle(cameraYRotate.getAngle() + dx * 0.2);
+                if (cameraLocked) {
+                    // Object move mode: move selected objects
+                    if (selectionManager.getSelectionCount() > 0) {
+                        selectionManager.translateSelection(dx * 0.05, dy * 0.05, 0);
+                        for (Node node : selectionManager.getSelectedObjects()) {
+                            boundingBoxController.updateBoundingBox(node);
+                        }
+                    }
+                } else {
+                    // Camera mode: rotate camera
+                    cameraXRotate.setAngle(cameraXRotate.getAngle() - dy * 0.2);
+                    cameraYRotate.setAngle(cameraYRotate.getAngle() + dx * 0.2);
+                }
             } else if (e.isSecondaryButtonDown()) {
                 // Pan camera
                 cameraTranslate.setX(cameraTranslate.getX() + dx * 0.05);
@@ -825,11 +846,12 @@ public class GraphicsSystem extends Application {
                 break;
 
             case R:
-                // Toggle camera lock / object move mode
                 cameraLocked = !cameraLocked;
                 updateModeLabel();
-                statusLabel.setText(cameraLocked ? "Mode: OBJECT MOVE (drag objects or light)"
-                        : "Mode: CAMERA (rotate/pan/zoom scene)");
+                if (sceneModeLabel != null) {
+                    sceneModeLabel.setText(cameraLocked ? "模式: 移动对象" : "模式: 相机");
+                }
+                statusLabel.setText(cameraLocked ? "Mode: OBJECT MOVE..." : "Mode: CAMERA...");
                 e.consume();
                 break;
 
