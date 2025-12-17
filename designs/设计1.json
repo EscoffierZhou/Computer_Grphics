@@ -1,0 +1,12 @@
+{
+  "name": "设计1",
+  "shapes": [
+    {"type":"长方体 Box", "x":306, "y":231, "rotation":0, "scale":2.0, "color":-13261},
+    {"type":"立方体 Cube", "x":306, "y":130, "rotation":0, "scale":1.0, "color":-10027162},
+    {"type":"长方体 Box", "x":253, "y":202, "rotation":0, "scale":1.0, "color":-39322},
+    {"type":"长方体 Box", "x":358, "y":197, "rotation":0, "scale":1.0, "color":-39322},
+    {"type":"长方体 Box", "x":289, "y":338, "rotation":0, "scale":1.0, "color":-6736897},
+    {"type":"长方体 Box", "x":328, "y":339, "rotation":0, "scale":1.0, "color":-6736897},
+    {"type":"球体 Sphere", "x":211, "y":347, "rotation":0, "scale":1.0, "color":-52276}
+  ]
+}

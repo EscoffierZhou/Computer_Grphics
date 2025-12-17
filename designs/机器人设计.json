@@ -1,0 +1,11 @@
+{
+  "name": "机器人设计",
+  "shapes": [
+    {"type":"长方体 Box", "x":297, "y":224, "rotation":0, "scale":1.7000000000000002, "color":-10185016},
+    {"type":"立方体 Cube", "x":298, "y":123, "rotation":0, "scale":1.0, "color":-10185016},
+    {"type":"长方体 Box", "x":245, "y":204, "rotation":0, "scale":1.0, "color":-10185016},
+    {"type":"长方体 Box", "x":346, "y":200, "rotation":0, "scale":1.0, "color":-10185016},
+    {"type":"长方体 Box", "x":284, "y":321, "rotation":0, "scale":1.0, "color":-10185016},
+    {"type":"长方体 Box", "x":317, "y":320, "rotation":0, "scale":1.0, "color":-10185016}
+  ]
+}
